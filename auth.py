@@ -14,7 +14,7 @@ cypher = Fernet(F_KEY)
 
 def is_auth(data):
     if "pw" in data.keys():
-        pw = cypher.decrypt(data['pw']).decode('utf-8')
+        pw = cypher.decrypt(bytes(data['pw']))
         if pw == SECRET:
             return True
 
