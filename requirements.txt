@@ -8,4 +8,4 @@ unidecode
 dms2dec
 requests
 gunicorn
-dotenv
+python-dotenv
