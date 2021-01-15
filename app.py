@@ -127,4 +127,4 @@ api.add_resource(Wrangler, "/api/wrangler")
 api.add_resource(Refuser, "/<path:content>")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=33507)
