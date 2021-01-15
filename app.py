@@ -2,9 +2,10 @@ from flask import Flask, jsonify, request, Response
 from flask_restful import Api, Resource
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from flask_pymongo import PyMongo
-from flask_cors import CORS
+from flask_pymongo import pymongo
 from pymongo import MongoClient
+from flask_cors import CORS
+
 import datetime
 import json
 import urllib.parse
@@ -17,30 +18,34 @@ from wrangler import wrangle
 
 app = Flask(__name__)
 
+
 app.debug = True
 CORS(app)
 
-limiter = Limiter(app, key_func=get_remote_address,
-                  default_limits=["2 per hour"])
-
-
-DB_USER = urllib.parse.quote_plus(DB_USER)
-DB_PASS = urllib.parse.quote_plus(DB_PASS)
-
-
-db_raw = MongoClient(DB_HOST, username=DB_USER, password=DB_PASS,
-                     authSource=DB_RAW_NAME, authMechanism='SCRAM-SHA-256').db
-db_clean = MongoClient(DB_HOST, username=DB_USER, password=DB_PASS,
-                       authSource=DB_CLEAN_NAME, authMechanism='SCRAM-SHA-256').db
-db_analytics = MongoClient(DB_HOST, username=DB_USER, password=DB_PASS,
-                           authSource=DB_ANALYTICS_NAME, authMechanism='SCRAM-SHA-256').db
+# limiter = Limiter(app, key_func=get_remote_address,
+#                   default_limits=["2 per hour"])
 
 
 api = Api(app)
 
+DB_USER = urllib.parse.quote(DB_USER)
+DB_PASS = urllib.parse.quote(DB_PASS)
+DB_RAW_NAME = urllib.parse.quote(DB_RAW_NAME)
+DB_CLEAN_NAME = urllib.parse.quote(DB_CLEAN_NAME)
+DB_ANALYTICS_NAME = urllib.parse.quote(DB_ANALYTICS_NAME)
+
+
+db_raw = pymongo.MongoClient("mongodb+srv://%s:%s@cluster0.4vass.mongodb.net/%s?retryWrites=true&w=majority" %
+                             (DB_USER, DB_PASS, DB_RAW_NAME)).raw
+db_clean = pymongo.MongoClient("mongodb+srv://%s:%s@cluster0.4vass.mongodb.net/%s?retryWrites=true&w=majority" %
+                               (DB_USER, DB_PASS, DB_CLEAN_NAME)).clean
+db_analytics = pymongo.MongoClient("mongodb+srv://%s:%s@cluster0.4vass.mongodb.net/%s?retryWrites=true&w=majority" %
+                                   (DB_USER, DB_PASS, DB_ANALYTICS_NAME)).analytics
+
 
 def form_response(status_code=401):
     switch = {
+        200: json.dumps({'message': 'All good! Wrangling underway.'}),
         201: json.dumps({'message': 'All good! Wrangling underway.'}),
         401: json.dumps({'error': 'Unauthorized', 'message': 'Password is invalid or not present.'}),
         405: json.dumps({'error': 'Method Not Allowed', 'message': "Request method is not offered at this endpoint."}),
@@ -127,4 +132,4 @@ api.add_resource(Wrangler, "/api/wrangler")
 api.add_resource(Refuser, "/<path:content>")
 
 if __name__ == '__main__':
-    app.run(port=33507)
+    app.run(port=33507, debug=True)
