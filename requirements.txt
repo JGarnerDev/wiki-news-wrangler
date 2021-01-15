@@ -1,10 +1,10 @@
-flask= 1.1.2
-flask_restful= 0.3.8
-flask_limiter= 1.4
-flask_pymongo= 2.3.0
-flask_cors= 3.0.10
-pymongo= 3.11.2
-unidecode= 1.1.2
-dms2dec= 0.1
-requests= 2.25.1
-gunicorn= 19.9.0
+flask
+flask_restful
+flask_limiter
+flask_pymongo
+flask_cors
+pymongo
+unidecode
+dms2dec
+requests
+gunicorn
