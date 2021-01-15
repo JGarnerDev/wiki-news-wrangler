@@ -21,6 +21,9 @@ CORS(app)
 limiter = Limiter(app, key_func=get_remote_address,
                   default_limits=["2 per hour"])
 
+print("AAAAAAAAAASSSS", DB_RAW_URI)
+print("AAAAAAAAAASSSS", DB_CLEAN_URI)
+print("AAAAAAAAAASSSS", DB_ANALYTICS_URI)
 db_raw = PyMongo(app, uri=DB_RAW_URI).db
 db_clean = PyMongo(app, uri=DB_CLEAN_URI).db
 db_analytics = PyMongo(app, uri=DB_ANALYTICS_URI).db
