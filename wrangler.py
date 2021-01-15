@@ -47,14 +47,13 @@ def cleanup_and_get_location_data_for(news):
     elif 'location_string' in keys:
         news['coords'] = location_help_from_here_api_with(
             news['location_string'])
-    elif 'pod' in keys:
+    elif 'ptod' in keys:
         news['coords'] = location_help_from_here_api_with(
-            news['pod'])
+            news['ptod'])
 
     else:
         news['coords'] = location_help_from_here_api_with(news['title'])
 
-    print(news)
     return news
 
 

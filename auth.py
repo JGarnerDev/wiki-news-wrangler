@@ -26,5 +26,5 @@ def check_data(data):
     if not is_auth(data):
         return 401
     if not is_valid(data):
-        return 400
+        return 406
     return 200
