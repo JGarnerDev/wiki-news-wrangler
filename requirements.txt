@@ -9,3 +9,4 @@ dms2dec
 requests
 gunicorn
 python-dotenv
+dnspython
