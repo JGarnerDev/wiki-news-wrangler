@@ -9,7 +9,7 @@ import datetime
 import json
 
 
-from settings import DB_RAW_URI, DB_CLEAN_URI, DB_ANALYTICS_URI
+from settings import DB_USER, DB_PASS, DB_RAW_NAME, DB_CLEAN_NAME, DB_ANALYTICS_NAME
 from auth import check_data
 from wrangler import wrangle
 
@@ -21,9 +21,12 @@ CORS(app)
 limiter = Limiter(app, key_func=get_remote_address,
                   default_limits=["2 per hour"])
 
-db_raw = MongoClient(DB_RAW_URI).db
-db_clean = MongoClient(DB_CLEAN_URI).db
-db_analytics = MongoClient(DB_ANALYTICS_URI).db
+db_raw = MongoClient('mongodb+srv://%s:%s@cluster0.4vass.mongodb.net/%s?retryWrites=true&w=majority' %
+                     (DB_USER, DB_PASS, DB_RAW_NAME)).db
+db_clean = MongoClient('mongodb+srv://%s:%s@cluster0.4vass.mongodb.net/%s?retryWrites=true&w=majority' %
+                       (DB_USER, DB_PASS, DB_CLEAN_NAME)).db
+db_analytics = MongoClient('mongodb+srv://%s:%s@cluster0.4vass.mongodb.net/%s?retryWrites=true&w=majority' %
+                           (DB_USER, DB_PASS, DB_ANALYTICS_NAME)).db
 
 
 api = Api(app)
