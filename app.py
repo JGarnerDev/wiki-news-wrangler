@@ -7,11 +7,13 @@ from flask_cors import CORS
 from pymongo import MongoClient
 import datetime
 import json
+import urllib.parse
 
 
-from settings import DB_USER, DB_PASS, DB_RAW_NAME, DB_CLEAN_NAME, DB_ANALYTICS_NAME
+from settings import DB_USER, DB_PASS, DB_HOST, DB_RAW_NAME, DB_CLEAN_NAME, DB_ANALYTICS_NAME
 from auth import check_data
 from wrangler import wrangle
+
 
 app = Flask(__name__)
 
@@ -21,12 +23,17 @@ CORS(app)
 limiter = Limiter(app, key_func=get_remote_address,
                   default_limits=["2 per hour"])
 
-db_raw = MongoClient('mongodb+srv://%s:%s@cluster0.4vass.mongodb.net/%s?retryWrites=true&w=majority' %
-                     (DB_USER, DB_PASS, DB_RAW_NAME)).db
-db_clean = MongoClient('mongodb+srv://%s:%s@cluster0.4vass.mongodb.net/%s?retryWrites=true&w=majority' %
-                       (DB_USER, DB_PASS, DB_CLEAN_NAME)).db
-db_analytics = MongoClient('mongodb+srv://%s:%s@cluster0.4vass.mongodb.net/%s?retryWrites=true&w=majority' %
-                           (DB_USER, DB_PASS, DB_ANALYTICS_NAME)).db
+DB_HOST = urllib.parse.quote_plus(DB_HOST)
+DB_USER = urllib.parse.quote_plus(DB_USER)
+DB_PASS = urllib.parse.quote_plus(DB_PASS)
+
+
+db_raw = MongoClient(DB_HOST, username=DB_USER, password=DB_PASS,
+                     authSource=DB_RAW_NAME, authMechanism='SCRAM-SHA-256').db
+db_clean = MongoClient(DB_HOST, username=DB_USER, password=DB_PASS,
+                       authSource=DB_CLEAN_NAME, authMechanism='SCRAM-SHA-256').db
+db_analytics = MongoClient(DB_HOST, username=DB_USER, password=DB_PASS,
+                           authSource=DB_ANALYTICS_NAME, authMechanism='SCRAM-SHA-256').db
 
 
 api = Api(app)
