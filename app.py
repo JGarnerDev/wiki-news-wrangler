@@ -22,8 +22,8 @@ app = Flask(__name__)
 app.debug = True
 CORS(app)
 
-# limiter = Limiter(app, key_func=get_remote_address,
-#                   default_limits=["2 per hour"])
+limiter = Limiter(app, key_func=get_remote_address,
+                  default_limits=["2 per hour"])
 
 
 api = Api(app)

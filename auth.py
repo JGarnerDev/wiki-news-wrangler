@@ -1,23 +1,16 @@
 from settings import SECRET, F_KEY
 from cryptography.fernet import Fernet
 
-
-cypher = Fernet(F_KEY)
-
-
-# data = {
-#   "timestamp":    timestamp,
-#   "description": "This is the raw news data scraped from Wikipedia by wiki-news-scraper",
-#   "scraped":      all_scraped_news
-# }
+key = bytes(F_KEY, 'utf-8')
+f = Fernet(key)
 
 
 def is_auth(data):
-    if "pw" in data.keys():
-        pw = cypher.decrypt(bytes(data['pw']))
-        if pw == SECRET:
+    if "token" in data.keys():
+        b = f.decrypt(bytes(data['token'], 'utf-8'))
+        pw_attempt = b.decode('utf-8')
+        if pw_attempt == SECRET:
             return True
-
     return False
 
 
