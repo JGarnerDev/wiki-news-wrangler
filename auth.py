@@ -1,4 +1,9 @@
-from settings import SECRET
+from settings import SECRET, F_KEY
+from cryptography.fernet import Fernet
+
+b = bytes(F_KEY, 'utf-8')
+
+cypher = Fernet(b)
 
 
 # data = {
@@ -10,7 +15,8 @@ from settings import SECRET
 
 def is_auth(data):
     if "pw" in data.keys():
-        if data['pw'] == SECRET:
+        pw = cypher.decrypt(data['pw']).decode('utf-8')
+        if pw == SECRET:
             return True
 
     return False
