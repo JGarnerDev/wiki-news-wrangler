@@ -1,9 +1,8 @@
 from settings import SECRET, F_KEY
 from cryptography.fernet import Fernet
 
-b = bytes(F_KEY, 'utf-8')
 
-cypher = Fernet(b)
+cypher = Fernet(F_KEY)
 
 
 # data = {
