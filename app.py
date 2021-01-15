@@ -23,7 +23,7 @@ CORS(app)
 limiter = Limiter(app, key_func=get_remote_address,
                   default_limits=["2 per hour"])
 
-DB_HOST = urllib.parse.quote_plus(DB_HOST)
+
 DB_USER = urllib.parse.quote_plus(DB_USER)
 DB_PASS = urllib.parse.quote_plus(DB_PASS)
 
