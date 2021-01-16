@@ -24,7 +24,7 @@ app.debug = True
 CORS(app)
 
 limiter = Limiter(app, key_func=get_remote_address,
-                  default_limits=["40 per day"])
+                  default_limits=["60 per day"])
 
 
 api = Api(app)
