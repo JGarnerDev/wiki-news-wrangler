@@ -6,7 +6,7 @@ from flask_pymongo import pymongo
 from pymongo import MongoClient
 from flask_cors import CORS
 
-import datetime
+
 import json
 import urllib.parse
 
@@ -14,6 +14,7 @@ import urllib.parse
 from settings import DB_USER, DB_PASS, DB_HOST, DB_RAW_NAME, DB_CLEAN_NAME, DB_ANALYTICS_NAME
 from auth import check_data
 from wrangler import wrangle
+from utils import t_str
 
 
 app = Flask(__name__)
@@ -44,13 +45,14 @@ db_analytics = pymongo.MongoClient("mongodb+srv://%s:%s@cluster0.4vass.mongodb.n
 
 
 def form_response(status_code=401):
+    awesome = {'message': 'Awesome.'}
     switch = {
-        200: json.dumps({'message': 'All good! Wrangling underway.'}),
-        201: json.dumps({'message': 'All good! Wrangling underway.'}),
-        401: json.dumps({'error': 'Unauthorized', 'message': 'Password is invalid or not present.'}),
-        405: json.dumps({'error': 'Method Not Allowed', 'message': "Request method is not offered at this endpoint."}),
-        406: json.dumps({'error': 'Not Acceptable', 'message': 'Data provided does not conform to specifications.'}),
-        421: json.dumps({'error': 'Misdirected Request', 'message': 'No endpoint'}),
+        200: json.dumps(awesome),
+        201: json.dumps(awesome),
+        401: json.dumps({'message': 'Password is invalid or not present.', 'error': 'Unauthorized'}),
+        405: json.dumps({'message': "Request method is not offered at this endpoint.", 'error': 'Method Not Allowed'}),
+        406: json.dumps({'message': 'Data provided does not conform to specifications.', 'error': 'Not Acceptable'}),
+        421: json.dumps({'message': 'No endpoint', 'error': 'Misdirected Request'}),
     }
     msg = switch[status_code]
     return Response(msg, status=status_code, mimetype='application/json')
@@ -66,16 +68,15 @@ class Wrangler(Resource):
         # authenticate and validate
         status_code = check_data(data)
         if status_code == 200:
-            time = '{:%Y-%m-%d}'.format(datetime.datetime.now())
+            time = t_str
             # send raw data to a db
             db_raw[time].insert_one(data)
             # wrangle, send to a db, return analytics
             analytics = wrangle(data, db_clean[time])
             # send analytics to a db
             db_analytics[time].insert_one(analytics)
-        # create a response
+        # create a response, send it
         return form_response(status_code)
-        # send a success/fail response
 
     def get(self):
         return form_response(406)
