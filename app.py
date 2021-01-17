@@ -6,10 +6,8 @@ from flask_pymongo import pymongo
 from pymongo import MongoClient
 from flask_cors import CORS
 
-
 import json
 import urllib.parse
-
 
 from settings import DB_USER, DB_PASS, DB_HOST, DB_RAW_NAME, DB_CLEAN_NAME, DB_ANALYTICS_NAME
 from auth import check_data
