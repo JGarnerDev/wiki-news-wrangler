@@ -66,5 +66,5 @@ def wrangle(data, collection):
                 cleanup_and_get_location_data_for(news))
 
     collection.insert_one(data_clean)
-    analytics = {"ass": "butt"}
+    analytics = {"TBD": "Analytics"}
     return analytics
